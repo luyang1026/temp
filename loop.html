@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="test">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="angular.js"></script>
+	<script type="text/javascript">
+		var m1 = angular.module('test',[]);
+		m1.controller('a',['$scope',AAA]);
+		function AAA($scope){
+			$scope.name = 'lu'
+			this.age = 123;
+			this.name2 = 'lu1'
+		}
+		AAA.prototype.name2 = 'lu2';
+
+	</script>
+	<style type="text/css">
+		.c{
+			display: table;
+			height: 100px;
+		}
+		
+		.a{
+			display: table-cell;
+			vertical-align: middle;
+		}
+	</style>
+</head>
+<body ng-controller="a as a1">
+	{{name}}{{a1.name2}}{{a1.agesoi}}
+		<div class="c">
+			<p class="a">123</p>
+	</div>
+</body>
+</html>

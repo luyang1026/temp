@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="test">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jquery-1.7.2.js"></script>
+	<script src="angular.js"></script>
+	<style type="text/css">
+		.active{
+			background-color: #ccc;
+		}
+	</style>
+	<script type="text/javascript">
+		console.log(history.pushState(null,'百度','www.baidu.com'))
+		var list = [
+			{name:'ly',age:23},
+			{name:'s',age:19},
+			{name:'ee',age:25},
+			{name:'sd',age:25},
+			{name:'by',age:27},
+			{name:'啊',age:22},
+			{name:'傻',age:21},
+		];
+		var m1 = angular.module('test',[]);
+		m1.filter('capitalize',function(){
+			return function(a,b){
+				return a.charAt(0).toUpperCase()+a.substring(1);
+			}
+		});
+		m1.controller('table',['$scope','$filter',function($scope,$filter){
+			$scope.dataList = list;
+			$scope.arr = ['aaa','bbb','ccc']
+			// $scope.fnSort = function(arg){
+			// 	arguments.callee['fnSort'+arg] = !arguments.callee['fnSort'+arg];
+			// 	$scope.dataList = $filter('orderBy')($scope.dataList,arg,!arguments.callee['fnSort'+arg]);
+			// };
+			// $scope.fnSearch = function(){
+			// 	$scope.dataList = $filter('filter')(list,$scope.searchVal);
+			// };
+		}]);
+		// window.onload = function(){
+		// 	var button = document.getElementsByTagName('input')[0];
+		// 	button.onclick = function(){
+		// 		angular.bootstrap(document,['test']);
+		// 	};
+		// };
+	</script>
+</head>
+<body ng-controller="table">
+	<input type="text" ng-model="searchVal"><input type="button" value="search" ng-click="fnSearch()">
+	<table border="1">
+		<tr>
+			<th ng-click="fnSort('name')">姓名</th>
+			<th ng-click="fnSort('age')">年龄</th>
+		</tr>
+		<tr ng-repeat="data in dataList" class="{{$even?'active':''}}">
+			<th>{{data.name|capitalize:'z'}}</th>
+			<th>{{data.age}}</th>
+		</tr>
+	</table>
+	<div ng-repeat="in in arr">
+		<p>{{in}}</p>
+		<span>{{in}}</span>
+	</div>
+	<pre>{{dataList}}</pre>
+</body>
+</html>                                                                                                              

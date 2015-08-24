@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="classProcess">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/modify.css">
+	<script src="js/angular.js"></script>
+	<script src="js/jquery-1.7.2.js"></script>
+	<script type="text/javascript">
+		var a = {true:'active'}[true]
+		console.log(a)
+		var m1 = angular.module('classProcess',[]);
+		m1.run(['$rootScope',function($rootScope){
+			// alert(1)
+		}])
+		m1.controller('main',['$scope','$http','$timeout',function($scope,$http,$timeout){
+			var id = 0;//文件夹id、目录id
+			var keyword = '';//检索词
+			var pageSize = 20;//每页显示条数
+			var pageId = 1;//当前页
+			var urlForView = 'http://192.168.0.158:8080/file/search/';
+			var urlForRunClass = 'http://192.168.0.158:8080/file/run/{id}/{type}'
+			//请求数据
+			$scope.pageNum = [1,2,3,4];//总页数
+			// $scope.pageNum.length = 10;
+			var timer = null;
+			$scope.refresh = function(keyword,id,pageId){
+				pageId = pageId||1;
+				id = id||0;
+				console.log(keyword)
+				keyword = keyword||'';
+				var pageSize = 20;
+				$timeout.cancel(timer);
+				timer = $timeout(function(){
+					$http.get(urlForView+pageSize+'/'+pageId+'?id='+id+'&keyword='+keyword).success(function(respond){
+						$scope.pageNum = Math.ceil(respond.count/pageSize);//总页数
+						$scope.files = respond.list;
+						setPages($scope.pageNum);
+					});
+				},300);
+			}
+			$scope.runClass = function(id,type){
+				$http.get(urlForRunClass+id+'/'+type).success(function(respond){
+
+				});
+			}
+			$scope.refresh();
+			function setPages(num){
+				var pageItem = null;
+				for (var i = num; i >0; i--) {
+					pageItem = $('<li><a href="javascript:;">'+i+'</a></li>');
+					if(i==1)pageItem = $('<li class="active"><a href="javascript:;">'+i+'</a></li>');
+					pageItem.click(function() {
+						// $scope.refresh('',,)
+					});
+					$('.pagination li:eq(1)').after(pageItem);
+				};
+			}
+			setTimeout(function(){
+				// setPages(10)
+			},10)
+		}]);
+	</script>
+</head>
+<body ng-controller="main">
+	<ol class="breadcrumb">
+	  <li><a href="#">Home</a></li>
+	  <li><a href="#">Library</a></li>
+	  <li class="active">Data</li>
+	</ol>
+	<div class="search-area">
+		课程名称:<input type="text" class="search-text" ng-model="searchText" ng-change="refresh(searchText)" style="display:inline-block">
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>名称</th>
+				<th>内容</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="file in files">
+				<td ng-bind="file.fileName" class="filename" ng-click="file.isFolder&&refresh('',file.id)"></td>
+				<td><input type="button" class="btn btn-info" value="跑课" ng-click="runClass(file.id,file.ext.substring(1));"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="text-align: center">
+		<ul class="pagination pagination-sm" style="display: inline-block;margin: 0">
+			<li>
+				<a href="javascript:;" aria-label="Previous">
+				<span aria-hidden="true">首页</span>
+				</a>
+			</li>
+			<li>
+				<a href="javascript:;" aria-label="Previous">
+				<span aria-hidden="true">上一页</span>
+				</a>
+			</li>
+			<li ng-repeat="pageItem in pageNum"><a href="javascript:;" ng-bind="$index"></a></li>
+			<li>
+				<a href="javascript:;" aria-label="Next">
+				<span aria-hidden="true">下一页</span>
+				</a>
+			</li>
+			<li>
+				<a href="javascript:;" aria-label="Next">
+				<span aria-hidden="true">末页</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+</body>
+</html>
