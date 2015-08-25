@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="radio">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="angular/angular.js"></script>
+	<script type="text/javascript">
+		console.log(0&&8)
+		var m1 = angular.module('radio',[]);
+		m1.controller('aa',['$scope',function($scope){
+			$scope.pageNum = [1,2];
+			$scope.curId= 1;
+			$scope.refresh = function(){
+				$scope.curId =2;
+			}
+		}]);
+	</script>
+</head>
+<body ng-controller="aa">
+	<select class="page-number" ng-model="pageValue" ng-change="refresh({pageId:pageValue,id:curId});curId=2">
+			<option ng-repeat="num in pageNum" ng-bind="num" value=""></option>
+	</select>
+	{{curId}}
+</body>
+</html>
